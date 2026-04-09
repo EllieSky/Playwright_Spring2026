@@ -15,4 +15,11 @@ def get_base_url():
 def get_browser_type():
     return os.getenv("BROWSER_TYPE", "chromium").lower()
 
+def get_viewport_width():
+    return int(os.getenv("VIEWPORT_WIDTH", "1920"))
+
+def get_viewport_height():
+    return int(os.getenv("VIEWPORT_HEIGHT", "1080"))
+
+
 

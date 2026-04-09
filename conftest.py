@@ -1,5 +1,5 @@
 import pytest
-
+from fixtures.new_user import get_shopper
 import config
 
 
@@ -11,3 +11,9 @@ def browser_type_launch_args() -> dict:
 @pytest.fixture(scope="session")
 def base_url() -> str:
     return config.get_base_url()
+
+@pytest.fixture(scope="session")
+def browser_context_args():
+    return {
+        'viewport': {'width': config.get_viewport_width(), 'height': config.get_viewport_height()},
+    }
