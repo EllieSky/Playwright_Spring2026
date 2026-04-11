@@ -1,5 +1,6 @@
 import pytest
 from fixtures.new_user import get_shopper
+from fixtures.menu import menu
 
 import config
 
