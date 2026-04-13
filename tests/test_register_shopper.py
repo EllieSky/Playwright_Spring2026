@@ -2,13 +2,17 @@ import pytest
 from playwright.sync_api import Page, expect
 
 from utils.helpers import generate_user_registration_data
+from pages.register_page import RegisterPage
 
 
-def test_register_shopper(page: Page):
+def test_register_shopper(page: Page, menu):
     user = generate_user_registration_data()
+    # page.goto("https://nop-qa.portnov.com/")
+    page.goto("/")
+    menu.user_menu.click_register_link()
+    # page.get_by_role('link', name='Register').click()
+    register_page = RegisterPage(page)
 
-    page.goto("https://nop-qa.portnov.com/")
-    page.get_by_role('link', name='Register').click()
 
 
     page.get_by_text("Female").click()
@@ -17,9 +21,9 @@ def test_register_shopper(page: Page):
     # Example of filtering elements:
     ### By text
     page.get_by_role('combobox').filter(has_text='Day').select_option(str(user.birth_date.day))
+    page.get_by_role('combobox').filter(has_text ='Month').select_option(str(user.birth_date.month))
     page.get_by_role('combobox').filter(has_text='Year').select_option(str(user.birth_date.year))
-    ### By child element
-    page.get_by_role('combobox').filter(has=page.get_by_role('option', name='Month')).select_option(str(user.birth_date.month))
+    # page.get_by_role('combobox').filter(has=page.get_by_role('option', name='Month')).select_option(str(user.birth_date.month))
     # page.locator("select[name=\"DateOfBirthDay\"]").select_option(str(user.birth_date.day))
     # page.locator("select[name=\"DateOfBirthMonth\"]").select_option(str(user.birth_date.month))
     page.get_by_role("textbox", name="Email:").fill(user.email)
