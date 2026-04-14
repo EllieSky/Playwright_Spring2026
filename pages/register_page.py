@@ -6,11 +6,11 @@ class RegisterPage(BasePage):
         super().__init__(page)
         self.path = "/register"
 
-        self.select_gender_f =  page.get_by_text("Female")
-        self.select_gender_m =  page.get_by_text("Male")
+        self.select_gender_f =  page.get_by_text("Female", exact=True)
+        self.select_gender_m =  page.get_by_text("Male", exact=True)
 
-        self.select_date =  page.get_by_role('combobox').filter(has_text='Day')
-        self.select_month = page.get_by_role('combobox').filter(has_text='Year')
+        self.select_day =  page.get_by_role('combobox').filter(has_text='Day')
+        self.select_month = page.get_by_role('combobox').filter(has_text='Month')
         self.select_year = page.get_by_role('combobox').filter(has_text='Year')
 
 
@@ -21,6 +21,7 @@ class RegisterPage(BasePage):
         self.company_name =  page.get_by_role("textbox", name="Company name:")
 
         self.newsletter = page.get_by_role("checkbox", name="Newsletter:")
+
         self.password = page.get_by_role("textbox", name="Password:", exact=True)
         self.confirm_password = page.get_by_role("textbox", name="Confirm password:")
 

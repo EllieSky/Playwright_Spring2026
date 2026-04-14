@@ -1,6 +1,7 @@
 import pytest
 from fixtures.new_user import get_shopper
 from fixtures.menu import menu
+from fixtures.register import register_page
 
 
 import config
@@ -21,7 +22,8 @@ def browser_context_args(browser_context_args):
         }
     }
 
-
 @pytest.fixture(scope="session")
 def base_url() -> str:
     return config.get_base_url()
+
+

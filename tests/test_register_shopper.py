@@ -1,53 +1,41 @@
-import pytest
 from playwright.sync_api import Page, expect
-
 from utils.helpers import generate_user_registration_data
-from pages.register_page import RegisterPage
 
-
-def test_register_shopper(page: Page, menu):
+def test_register_shopper(page: Page, menu, register_page):
     user = generate_user_registration_data()
-    # page.goto("https://nop-qa.portnov.com/")
+    password = user.password
+
     page.goto("/")
-    menu.user_menu.click_register_link()
-    # page.get_by_role('link', name='Register').click()
-    register_page = RegisterPage(page)
+    menu.user_menu.goto_register()
 
+    register_page.select_gender_m.click()
+    register_page.first_name.fill(user.first_name)
+    register_page.last_name.fill(user.last_name)
+    register_page.select_day.select_option(str(user.birth_date.day))
+    register_page.select_month.select_option(str(user.birth_date.month))
+    register_page.select_year.select_option(str(user.birth_date.year))
+    register_page.email.fill(user.email)
+    register_page.company_name.fill(user.company)
+    register_page.newsletter.uncheck()
+    register_page.password.fill(password)
+    register_page.confirm_password.fill(password)
+    register_page.register_button.click()
 
-
-    page.get_by_text("Female").click()
-    page.get_by_role("textbox", name="First name:").fill(user.first_name)
-    page.get_by_role("textbox", name="Last name:").fill(user.last_name)
-    # Example of filtering elements:
-    ### By text
-    page.get_by_role('combobox').filter(has_text='Day').select_option(str(user.birth_date.day))
-    page.get_by_role('combobox').filter(has_text ='Month').select_option(str(user.birth_date.month))
-    page.get_by_role('combobox').filter(has_text='Year').select_option(str(user.birth_date.year))
-    # page.get_by_role('combobox').filter(has=page.get_by_role('option', name='Month')).select_option(str(user.birth_date.month))
-    # page.locator("select[name=\"DateOfBirthDay\"]").select_option(str(user.birth_date.day))
-    # page.locator("select[name=\"DateOfBirthMonth\"]").select_option(str(user.birth_date.month))
-    page.get_by_role("textbox", name="Email:").fill(user.email)
-    page.get_by_role("textbox", name="Company name:").fill(user.company)
-    page.get_by_role("checkbox", name="Newsletter:").uncheck()
-    page.get_by_role("textbox", name="Password:", exact=True).fill(user.password)
-    page.get_by_role("textbox", name="Confirm password:").fill(user.password)
-    page.get_by_role("button", name="Register").click()
-    expect(page.get_by_text("Your registration completed")).to_be_visible()
-    # top OR bottom expect, but NOT both
-    expect(page.locator('.registration-result-page .result')).to_contain_text("Your registration completed")
-    expect(page.get_by_role("link", name="Continue")).to_be_visible()
+    expect(register_page.registration_completed_msg_box).to_be_visible()
+    expect(register_page.registration_completed_msg).to_contain_text("Your registration completed")
+    expect(register_page.continue_link).to_be_visible()
 
     # after clicking register
-    page.locator('.header-links .ico-account').click()
-    expect(page.get_by_role("textbox", name="First name:")).to_have_value(user.first_name)
-    expect(page.get_by_role("textbox", name="Last name:")).to_have_value(user.last_name)
+    menu.user_menu.goto_my_account()
 
-    expect(page.get_by_role('combobox').filter(has_text='Day')).to_have_value(str(user.birth_date.day))
-    expect(page.get_by_role('combobox').filter(has_text='Month')).to_have_value(str(user.birth_date.month))
-    expect(page.get_by_role('combobox').filter(has_text='Year')).to_have_value(str(user.birth_date.year))
-    expect(page.get_by_role("textbox", name="Email:")).to_have_value(user.email)
-    expect(page.get_by_role("textbox", name="Company name:")).to_have_value(user.company)
-    expect(page.get_by_role("checkbox", name="Newsletter:")).not_to_be_checked()
+    expect(register_page.first_name).to_have_value(user.first_name)
+    expect(register_page.last_name).to_have_value(user.last_name)
+    expect(register_page.select_day).to_have_value(str(user.birth_date.day))
+    expect(register_page.select_month).to_have_value(str(user.birth_date.month))
+    expect(register_page.select_year).to_have_value(str(user.birth_date.year))
+    expect(register_page.email).to_have_value(user.email)
+    expect(register_page.company_name).to_have_value(user.company)
+    expect(register_page.newsletter).not_to_be_checked()
 
 def test_user_registration_fails_with_mismatched_passwords():
     pass
