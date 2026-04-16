@@ -1,6 +1,7 @@
-from playwright.sync_api import expect, Page
+from playwright.sync_api import expect
 
 from fixtures.menu import Menu
+from fixtures.extended_page import Page
 from utils.helpers import generate_user_registration_data
 
 
@@ -10,9 +11,11 @@ def test_register_shopper(page: Page, menu: Menu):
     page.goto("/")
     menu.user_menu.goto_register()
 
-    page.register_page.fill_registration_details(user.first_name, user.last_name, user.email, user.password,
-                                            gender='female', newsletter=False,
-                                            company=user.company, birth_date=user.birth_date)
+    page.register_page.fill_registration_details(
+        user.first_name, user.last_name, user.email, user.password,
+        gender='female', newsletter=False,
+        company=user.company, birth_date=user.birth_date
+    )
 
     # todo - make page for confirmation
     expect(page.get_by_text("Your registration completed")).to_be_visible()
