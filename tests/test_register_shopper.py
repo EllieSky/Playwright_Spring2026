@@ -8,18 +8,9 @@ def test_register_shopper(page: Page, menu, register_page):
     page.goto("/")
     menu.user_menu.goto_register()
 
-    register_page.select_gender_m.click()
-    register_page.first_name.fill(user.first_name)
-    register_page.last_name.fill(user.last_name)
-    register_page.select_day.select_option(str(user.birth_date.day))
-    register_page.select_month.select_option(str(user.birth_date.month))
-    register_page.select_year.select_option(str(user.birth_date.year))
-    register_page.email.fill(user.email)
-    register_page.company_name.fill(user.company)
-    register_page.newsletter.uncheck()
-    register_page.password.fill(password)
-    register_page.confirm_password.fill(password)
-    register_page.register_button.click()
+    register_page.fill_registration_details(user.first_name, user.last_name, user.email, password,
+                                            gender=user.gender, birth_date=user.birth_date, company=user.company,
+                                            newsletter=False, re_pw=password)
 
     expect(register_page.registration_completed_msg_box).to_be_visible()
     expect(register_page.registration_completed_msg).to_contain_text("Your registration completed")

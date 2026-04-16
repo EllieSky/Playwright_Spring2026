@@ -7,6 +7,7 @@ from faker import Faker
 class RegisterUserData:
     first_name: str
     last_name: str
+    gender: str
     birth_date: datetime.date
     email: str
     company: str
@@ -18,6 +19,7 @@ def generate_user_registration_data():
     return RegisterUserData(
         first_name=f.first_name_female(),
         last_name = f.last_name(),
+        gender = f.random_element(elements=('Male', 'Female')),
         birth_date = f.date_of_birth(maximum_age=99),
         email = f.free_email(),
         company = f.company(),
