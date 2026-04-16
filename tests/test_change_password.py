@@ -1,13 +1,16 @@
 from playwright.sync_api import Page, expect
+from fixtures.api_fixtures import api_register_user
 
 
-def test_change_password_successfully(page: Page, get_shopper):
+def test_change_password_successfully(page: Page, api_register_user):
+    user_email = api_register_user['email']
+    user_pswd = api_register_user['password']
 
     # Expect a title "to contain" a substring.
-    expect(page).not_to_have_url('/registerresult')
-
-    user_email = get_shopper[0]
-    user_pswd = get_shopper[1]
+    # expect(page).not_to_have_url('/registerresult')
+    #
+    # user_email = get_shopper[0]
+    # user_pswd = get_shopper[1]
 
     page.goto('/login')
     page.get_by_label("Email:").fill(user_email)
