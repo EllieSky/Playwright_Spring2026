@@ -1,7 +1,5 @@
-from dataclasses import dataclass
-
 import pytest
-from playwright.sync_api import Page
+from playwright.sync_api import Page as PlaywrightPage
 
 ########################### DO NOT REMOVE #########################
 # These imports are registering fixtures with playwright,
@@ -12,11 +10,7 @@ from fixtures.menu import menu
 
 
 import config
-from pages.login_page import LoginPage
-from pages.my_account_add_address import AddAddressPage
-from pages.my_account_addresses import AddressesPage
-from pages.my_account_customer_info_page import CustomerInfo
-from pages.register_page import RegisterPage
+from fixtures.extended_page import Page
 
 
 @pytest.fixture(scope="session")
@@ -41,26 +35,7 @@ def base_url() -> str:
     return config.get_base_url()
 
 
-@dataclass
-class MyAccount:
-    customer_info_page: CustomerInfo
-    addresses: AddressesPage
-    add_address: AddAddressPage
-    # orders_page: OrdersPage
-    # change_password_page: ChangePasswordPage
-
-
 @pytest.fixture
-def page(page: Page):
-    page.login_page = LoginPage(page)
-    page.register_page = RegisterPage(page)
-    # page.customer_info_page = CustomerInfo(page)
-    page.my_account = MyAccount(
-        CustomerInfo(page),
-        AddressesPage(page),
-        AddAddressPage(page),
-        # OrdersPage(page),
-        # ChangePasswordPage(page)
-    )
-
-    return page
+def page(page: PlaywrightPage) -> Page:
+    """Returns a typed Page wrapper with page objects for IDE autocomplete."""
+    return Page(page)
