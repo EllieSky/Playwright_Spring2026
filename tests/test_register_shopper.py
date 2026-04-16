@@ -22,7 +22,6 @@ def test_register_shopper(page: Page, menu: Menu):
 
     # after clicking register
     menu.user_menu.goto_my_account()
-
     expect(page.my_account.customer_info_page.fld_first_name).to_have_value(user.first_name)
     expect(page.my_account.customer_info_page.fld_last_name).to_have_value(user.last_name)
 
