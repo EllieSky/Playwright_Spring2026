@@ -4,10 +4,38 @@ import re
 import config
 from utils.helpers import generate_user_registration_data
 
+@pytest.fixture
+def api_auth(playwright, browser):
+    auth_url = '/login'
+    user_agent = config.get_user_agent()
+    session = playwright.request.new_context(base_url=config.get_base_url(), user_agent=user_agent)
+    resp = session.get(auth_url)
+
+    token_value = re.search(r'name=__RequestVerificationToken type=hidden value=(.+?)>', resp.text()).group(1)
+
+    payload = {
+        'Email': 'user.shopper@yopmail.com',
+        'Password': 'user9900',
+        '__RequestVerificationToken': token_value,
+        'RememberMe': 'false'
+    }
+    auth_response = session.post(auth_url, form=payload)
+    is_success = 'My account' in auth_response.text() and 'Log out' in auth_response.text()
+    assert is_success, "Failed to authenticate a user during test setup."
+
+    state = session.storage_state()
+    context = browser.new_context(storage_state=state, base_url=config.get_base_url())
+
+    yield context.new_page()
+
+    session.dispose()
+    context.close()
+
+
 
 @pytest.fixture
 def api_register_user(playwright):
-    user_agent = 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/146.0.0.0 Safari/537.36'
+    user_agent = config.get_user_agent()
 
     session = playwright.request.new_context(base_url=config.get_base_url(), user_agent=user_agent)
     resp = session.get('/register')
@@ -32,7 +60,7 @@ def api_register_user(playwright):
 
     registration_response = session.post("/register", form=payload)
     is_success = 'Your registration completed' in registration_response.text()
-    assert is_success
+    assert is_success, "Failed to register a user during test setup."
 
     yield {'email': user.email, 'password': user.password}
 
