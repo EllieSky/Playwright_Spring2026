@@ -13,6 +13,8 @@ def get_browser_launch_options():
 def get_base_url():
     return os.getenv('BASE_URL').lower()
 
+def get_user_agent():
+    return os.getenv('USER_AGENT')
 
 def get_browser_context_options():
     return {
