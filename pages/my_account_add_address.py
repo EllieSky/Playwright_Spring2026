@@ -8,7 +8,7 @@ class AddAddressPage(BasePage):
         self.path = "/customer/addressadd"
 
         self.fld_first_name = page.get_by_role("textbox", name="First name:")
-        self.fld_last_name = page.get_by_role("textbox", name="First name:")
+        self.fld_last_name = page.get_by_role("textbox", name="Last name:")
         self.fld_email = page.get_by_role("textbox", name="Email:")
         self.fld_street = page.get_by_role("textbox", name="Address 1:")
         self.fld_city = page.get_by_role("textbox", name="City:")
