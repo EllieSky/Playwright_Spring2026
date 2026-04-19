@@ -10,6 +10,7 @@ class RegisterUserData:
     birth_date: datetime.date
     email: str
     company: str
+    phone: str
     password: str
 
 
@@ -21,5 +22,21 @@ def generate_user_registration_data():
         birth_date = f.date_of_birth(maximum_age=99),
         email = f.free_email(),
         company = f.company(),
+        phone = f.phone_number(),
         password = f.password(8)
+    )
+
+@dataclass
+class AddressData:
+    street: str
+    city: str
+    zip: str
+
+
+def generate_address_data():
+    f = Faker()
+    return AddressData(
+        street = f.street_address(),
+        city = f.city(),
+        zip = f.zipcode()
     )

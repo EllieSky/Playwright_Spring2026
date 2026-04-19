@@ -13,6 +13,8 @@ from fixtures.menu import menu
 
 import config
 from pages.login_page import LoginPage
+from pages.my_account_add_address import AddAddressPage
+from pages.my_account_addresses import AddressesPage
 from pages.my_account_customer_info_page import CustomerInfo
 from pages.register_page import RegisterPage
 
@@ -42,6 +44,8 @@ def base_url() -> str:
 @dataclass
 class MyAccount:
     customer_info_page: CustomerInfo
+    addresses: AddressesPage
+    add_address: AddAddressPage
     # orders_page: OrdersPage
     # change_password_page: ChangePasswordPage
 
@@ -53,6 +57,8 @@ def page(page: Page):
     # page.customer_info_page = CustomerInfo(page)
     page.my_account = MyAccount(
         CustomerInfo(page),
+        AddressesPage(page),
+        AddAddressPage(page),
         # OrdersPage(page),
         # ChangePasswordPage(page)
     )
