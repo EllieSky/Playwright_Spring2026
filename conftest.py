@@ -1,5 +1,5 @@
 import pytest
-from playwright.sync_api import Page as PlaywrightPage
+from playwright.sync_api import Page as PlaywrightPage, BrowserType
 
 ########################### DO NOT REMOVE #########################
 # These imports are registering fixtures with playwright,
@@ -12,6 +12,14 @@ from fixtures.menu import menu
 import config
 from fixtures.extended_page import Page
 
+@pytest.fixture(scope="session")
+def browser_type(playwright):
+
+    # if config.get_browser_type().lower() == 'brave':
+    #     return BrowserType().launch(executable_path="/Applications/Brave Browser.app/Contents/MacOS/Brave Browser")
+
+    return getattr(playwright, config.get_browser_type())
+
 
 @pytest.fixture(scope="session")
 def browser_type_launch_args() -> dict:
@@ -20,7 +28,20 @@ def browser_type_launch_args() -> dict:
 
 
 @pytest.fixture(scope="session")
-def browser_context_args(browser_context_args):
+def browser_context_args(browser_context_args, playwright):
+    mobile = config.get_mobile_device_type()
+    browser = config.get_browser_type()
+
+    is_device = playwright.devices.get(mobile, None)
+    # is_device = playwright.devices[mobile]
+
+    if is_device and not browser.lower() == 'firefox':
+        return {
+            **browser_context_args,
+            **is_device
+
+        }
+
     return {
         **browser_context_args,
         'viewport': {

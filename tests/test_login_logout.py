@@ -1,7 +1,10 @@
 import re
+
+import pytest
 from playwright.sync_api import Page, expect
 
 
+# @pytest.mark.mobile
 def test_valid_login_and_logout(page: Page, menu):
     page.goto("/")
     menu.user_menu.goto_login()   # replaces the line below
