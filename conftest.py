@@ -2,7 +2,8 @@ import pytest
 
 import config
 from fixtures.new_user import get_shopper
-
+from fixtures.menu import menu
+from fixtures.menu import menu
 
 @pytest.fixture(scope="session")
 def browser_type_launch_args() -> dict:

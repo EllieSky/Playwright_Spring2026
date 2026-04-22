@@ -1,4 +1,6 @@
 from playwright.sync_api import Page, expect
+
+from pages.register_page import RegisterPage
 from utils.helpers import generate_user_registration_data
 
 def test_register_shopper(page: Page):
@@ -45,7 +47,17 @@ def test_register_shopper(page: Page):
     # page.get_by_role("button", name="Save").hover()
 
 
+def test_register_shopper_clean_with_register_page(page: Page):
+    register_page = RegisterPage(page)
+    page.goto('/register') # do we need it here? because RegisterPage class is already at the /register
 
+    user = generate_user_registration_data()
+
+    register_page.register_user_required_fields(user.first_name, user.last_name, user.email, user.password)
+
+    expect(page.get_by_text("Your registration completed")).to_be_visible()
+    expect(page.locator(".registration-result-page .result")).to_contain_text("Your registration completed")
+    expect(page.get_by_role("link", name="Continue")).to_be_visible()
 
 
 
