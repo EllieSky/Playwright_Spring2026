@@ -15,7 +15,7 @@ class MyAccount:
     add_address_page: AddAddressPage
 
 
-class Page:
+class Page(PlaywrightPage):
     """Typed wrapper around Playwright Page with attached page objects for IDE autocomplete."""
 
     def __init__(self, page: PlaywrightPage):

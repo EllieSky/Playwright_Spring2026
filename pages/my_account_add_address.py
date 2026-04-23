@@ -23,8 +23,8 @@ class AddAddressPage(BasePage):
         self.fld_last_name.fill(last_name)
         self.fld_email.fill(email)
         self.page.get_by_label("Country:").select_option("237")  # United States of America
-        self.page.get_by_label("State / province:").locator('option', has_text="CA").wait_for(state="attached")
-        self.page.get_by_label("State / province:").select_option("CA")
+        self.page.wait_for_selector('select[name="Address.StateProvinceId"] option[value="1677"]', state="attached")
+        self.page.get_by_label("State / province:").select_option("1677")  # CA
         self.fld_city.fill(city)
         self.fld_street.fill(street)
         self.fld_zipcode.fill(zipcode)

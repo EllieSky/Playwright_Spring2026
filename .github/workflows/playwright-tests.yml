@@ -58,8 +58,12 @@ jobs:
         run: playwright install --with-deps
 
       - name: Run tests
-        run: pytest -o addopts=
-        continue-on-error: true
+        run: |
+          if [ -z "$MOBILE" ]; then
+            pytest -o addopts= -m "not mobile"
+          else
+            pytest -o addopts= -m "not desktop-only"
+          fi
 
       - name: Publish Test Report
         uses: reporterplus/pytest-html-plus-action@v2
