@@ -15,8 +15,8 @@ from fixtures.extended_page import Page
 @pytest.fixture(scope="session")
 def browser_type(playwright):
 
-    # if config.get_browser_type().lower() == 'brave':
-    #     return BrowserType().launch(executable_path="/Applications/Brave Browser.app/Contents/MacOS/Brave Browser")
+    if config.get_browser_type().lower() == 'brave':
+        return playwright.chromium
 
     return getattr(playwright, config.get_browser_type())
 
@@ -24,6 +24,11 @@ def browser_type(playwright):
 @pytest.fixture(scope="session")
 def browser_type_launch_args() -> dict:
     """Browser launch args from centralized config."""
+    if config.get_browser_type().lower() == 'brave':
+        return {
+            **config.get_browser_launch_options(),
+            "executable_path":"/Applications/Brave Browser.app/Contents/MacOS/Brave Browser"
+        }
     return config.get_browser_launch_options()
 
 
