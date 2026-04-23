@@ -57,15 +57,10 @@ jobs:
       - name: Install Playwright browsers
         run: playwright install --with-deps
 
-      - name: Run tests with HTML report
-        run: |
-          pytest --html=report.html --self-contained-html
+      - name: Run tests
+        run: pytest -o addopts=
         continue-on-error: true
 
-      - name: Upload HTML report
-        uses: actions/upload-artifact@v4
+      - name: Publish Test Report
+        uses: reporterplus/pytest-html-plus-action@v2
         if: always()
-        with:
-          name: test-report
-          path: report.html
-          retention-days: 30

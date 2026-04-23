@@ -11,6 +11,18 @@ from fixtures.menu import menu
 
 import config
 from fixtures.extended_page import Page
+import pytest_html
+
+
+@pytest.hookimpl(hookwrapper=True)
+def pytest_runtest_makereport(item, call):
+    outcome = yield
+    report = outcome.get_result()
+    if report.when == "call" and report.failed:
+        if "page" in item.fixturenames:
+            page = item.funcargs["page"]
+            screenshot = page.screenshot(full_page=True)
+            report.extra = [pytest_html.extras.png(screenshot)]
 
 @pytest.fixture(scope="session")
 def browser_type(playwright):
