@@ -1,5 +1,6 @@
 import pytest
 from playwright.sync_api import Page as PlaywrightPage, BrowserType
+import base64
 
 ########################### DO NOT REMOVE #########################
 # These imports are registering fixtures with playwright,
@@ -22,7 +23,8 @@ def pytest_runtest_makereport(item, call):
         if "page" in item.fixturenames:
             page = item.funcargs["page"]
             screenshot = page.screenshot(full_page=True)
-            report.extra = [pytest_html.extras.png(screenshot)]
+            screenshot_b64 = base64.b64encode(screenshot).decode()
+            report.extra = [pytest_html.extras.png(screenshot_b64)]
 
 @pytest.fixture(scope="session")
 def browser_type(playwright):
