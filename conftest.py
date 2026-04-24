@@ -1,5 +1,6 @@
 import pytest
 from playwright.sync_api import Page as PlaywrightPage, BrowserType
+import base64
 
 ########################### DO NOT REMOVE #########################
 # These imports are registering fixtures with playwright,
@@ -11,12 +12,25 @@ from fixtures.menu import menu
 
 import config
 from fixtures.extended_page import Page
+import pytest_html
+
+
+@pytest.hookimpl(hookwrapper=True)
+def pytest_runtest_makereport(item, call):
+    outcome = yield
+    report = outcome.get_result()
+    if report.when == "call" and report.failed:
+        if "page" in item.fixturenames:
+            page = item.funcargs["page"]
+            screenshot = page.screenshot(full_page=True)
+            screenshot_b64 = base64.b64encode(screenshot).decode()
+            report.extra = [pytest_html.extras.png(screenshot_b64)]
 
 @pytest.fixture(scope="session")
 def browser_type(playwright):
 
-    # if config.get_browser_type().lower() == 'brave':
-    #     return BrowserType().launch(executable_path="/Applications/Brave Browser.app/Contents/MacOS/Brave Browser")
+    if config.get_browser_type().lower() == 'brave':
+        return playwright.chromium
 
     return getattr(playwright, config.get_browser_type())
 
@@ -24,6 +38,11 @@ def browser_type(playwright):
 @pytest.fixture(scope="session")
 def browser_type_launch_args() -> dict:
     """Browser launch args from centralized config."""
+    if config.get_browser_type().lower() == 'brave':
+        return {
+            **config.get_browser_launch_options(),
+            "executable_path":"/Applications/Brave Browser.app/Contents/MacOS/Brave Browser"
+        }
     return config.get_browser_launch_options()
 
 
